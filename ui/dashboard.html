@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VAS — Dashboard</title>
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a class="navbar-brand" href="dashboard.html">VAS</a>
+    <div class="navbar-links">
+      <a href="dashboard.html" class="active">Dashboard</a>
+      <a href="alerts.html">Alerts</a>
+      <a href="test.html">Test Model</a>
+      <button class="btn-logout" id="btnLogout">Logout</button>
+    </div>
+  </nav>
+
+  <main class="page">
+
+    <div class="page-header">
+      <h1>Dashboard</h1>
+      <p class="page-subtitle" id="lastUpdated">loading...</p>
+    </div>
+
+    <div class="error-banner" id="errorBanner"></div>
+
+    <div class="cards">
+      <div class="card card--danger">
+        <div class="card-label">Total Alerts</div>
+        <div class="card-value" id="statTotal">—</div>
+      </div>
+      <div class="card card--accent">
+        <div class="card-label">Violence Today</div>
+        <div class="card-value" id="statToday">—</div>
+      </div>
+      <div class="card card--ok">
+        <div class="card-label">Reviewed</div>
+        <div class="card-value" id="statReviewed">—</div>
+      </div>
+    </div>
+
+    <div class="chart-panel">
+      <div class="chart-panel-header">
+        <h2>Alerts — last 7 days</h2>
+        <span>violence detections per day</span>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="alertsChart"></canvas>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="js/auth.js"></script>
+  <script src="js/charts.js"></script>
+
+</body>
+</html>

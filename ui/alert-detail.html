@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VAS — Alert Detail</title>
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <a class="navbar-brand" href="dashboard.html">VAS</a>
+    <div class="navbar-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="alerts.html" class="active">Alerts</a>
+      <a href="test.html">Test Model</a>
+      <button class="btn-logout" id="btnLogout">Logout</button>
+    </div>
+  </nav>
+
+  <main class="page">
+
+    <div class="page-header">
+      <a href="alerts.html" class="back-link">← Back to Alerts</a>
+      <h1>Alert Detail</h1>
+      <p class="page-subtitle" id="alertId">loading...</p>
+    </div>
+
+    <div class="error-banner" id="errorBanner"></div>
+
+    <div class="detail-grid" id="detailGrid">
+
+      <div class="detail-panel">
+        <div class="detail-panel-title">Detection Info</div>
+        <div class="detail-row">
+          <span class="detail-label">Alert ID</span>
+          <span class="detail-value" id="dId">—</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Label</span>
+          <span class="detail-value" id="dLabel">—</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Confidence</span>
+          <span class="detail-value" id="dConfidence">—</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Camera ID</span>
+          <span class="detail-value" id="dCamera">—</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Timestamp</span>
+          <span class="detail-value" id="dTimestamp">—</span>
+        </div>
+      </div>
+
+      <div class="detail-panel">
+        <div class="detail-panel-title">Review Status</div>
+        <div class="detail-row">
+          <span class="detail-label">Reviewed</span>
+          <span class="detail-value" id="dReviewed">—</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Reviewed By</span>
+          <span class="detail-value" id="dReviewedBy">—</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Reviewed At</span>
+          <span class="detail-value" id="dReviewedAt">—</span>
+        </div>
+
+        <button class="btn-review" id="btnReview" style="display:none">
+          Mark as Reviewed
+        </button>
+        <div class="review-success" id="reviewSuccess" style="display:none">
+          ✓ Marked as reviewed
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <script src="js/auth.js"></script>
+  <script src="js/detail.js"></script>
+
+</body>
+</html>

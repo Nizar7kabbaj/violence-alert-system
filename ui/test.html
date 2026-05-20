@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VAS — Model Test</title>
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .drop-zone {
+      border: 1px dashed var(--border2);
+      background: var(--surface);
+      padding: 3.5rem 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      position: relative;
+    }
+
+    .drop-zone:hover,
+    .drop-zone.drag-over {
+      border-color: var(--accent);
+      background: var(--surface2);
+    }
+
+    .drop-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    .drop-icon {
+      font-family: var(--mono);
+      font-size: 2rem;
+      color: var(--border2);
+      margin-bottom: 1rem;
+      display: block;
+      transition: color 0.2s;
+    }
+
+    .drop-zone:hover .drop-icon { color: var(--accent); }
+
+    .drop-label {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+
+    .drop-formats {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--border2);
+      margin-top: 0.5rem;
+      letter-spacing: 0.06em;
+    }
+
+    .file-chosen {
+      display: none;
+      margin-top: 1rem;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--text2);
+      letter-spacing: 0.04em;
+    }
+
+    .file-chosen span {
+      color: var(--accent);
+    }
+
+    .btn-run {
+      margin-top: 1.5rem;
+      width: 100%;
+      background: var(--accent);
+      border: none;
+      color: #fff;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 0.85rem;
+      cursor: pointer;
+      transition: opacity 0.15s, box-shadow 0.2s;
+      border-radius: var(--radius);
+    }
+
+    .btn-run:hover:not(:disabled) {
+      opacity: 0.9;
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    .btn-run:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    /* ─── PROGRESS BAR ─── */
+    .progress-wrap {
+      display: none;
+      margin-top: 1.5rem;
+    }
+
+    .progress-label {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+    }
+
+    .progress-bar-track {
+      width: 100%;
+      height: 2px;
+      background: var(--border2);
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      width: 0%;
+      transition: width 0.3s ease;
+      animation: indeterminate 1.4s ease infinite;
+    }
+
+    @keyframes indeterminate {
+      0%   { width: 0%; margin-left: 0%; }
+      50%  { width: 60%; margin-left: 20%; }
+      100% { width: 0%; margin-left: 100%; }
+    }
+
+    /* ─── RESULT PANEL ─── */
+    .result-panel {
+      display: none;
+      margin-top: 1.5rem;
+      border: 1px solid var(--border2);
+      background: var(--surface);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .result-panel::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 2px;
+    }
+
+    .result-panel.violence::before {
+      background: linear-gradient(90deg, var(--accent), transparent);
+    }
+
+    .result-panel.safe::before {
+      background: linear-gradient(90deg, var(--ok), transparent);
+    }
+
+    .result-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .result-verdict {
+      font-family: var(--mono);
+      font-size: 1rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 400;
+    }
+
+    .result-panel.violence .result-verdict { color: var(--accent); }
+    .result-panel.safe .result-verdict     { color: var(--ok); }
+
+    .result-confidence {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    .result-body {
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 600px) {
+      .result-body { flex-direction: column; }
+    }
+
+    .result-snapshot {
+      flex-shrink: 0;
+      width: 220px;
+    }
+
+    .result-snapshot img {
+      width: 100%;
+      display: block;
+      border: 1px solid var(--border2);
+    }
+
+    .result-snapshot-label {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      color: var(--border2);
+      letter-spacing: 0.08em;
+      margin-top: 0.4rem;
+      text-transform: uppercase;
+    }
+
+    .result-no-snapshot {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      padding: 1rem;
+      border: 1px dashed var(--border);
+      text-align: center;
+      width: 220px;
+    }
+
+    .result-meta {
+      flex: 1;
+    }
+
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--border);
+      gap: 1rem;
+    }
+
+    .meta-row:last-child { border-bottom: none; }
+
+    .meta-key {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .meta-val {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--text);
+      text-align: right;
+    }
+
+    .meta-val.accent { color: var(--accent); }
+    .meta-val.ok     { color: var(--ok); }
+
+    /* ─── CONFIDENCE METER ─── */
+    .conf-meter {
+      margin-top: 1rem;
+    }
+
+    .conf-track {
+      width: 100%;
+      height: 3px;
+      background: var(--border2);
+      margin-top: 0.4rem;
+    }
+
+    .conf-fill {
+      height: 100%;
+      transition: width 0.6s ease;
+    }
+
+    .violence .conf-fill { background: var(--accent); }
+    .safe .conf-fill     { background: var(--ok); }
+
+    /* ─── TEST AREA WRAPPER ─── */
+    .test-wrap {
+      max-width: 680px;
+    }
+
+    /* ─── ALERT LINK ─── */
+    .alert-link {
+      display: inline-block;
+      margin-top: 1rem;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(230,57,70,0.3);
+      padding-bottom: 1px;
+      letter-spacing: 0.06em;
+      transition: opacity 0.15s;
+    }
+
+    .alert-link:hover { opacity: 0.7; }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a class="navbar-brand" href="dashboard.html">VAS</a>
+    <div class="navbar-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="alerts.html">Alerts</a>
+      <a href="test.html" class="active">Test Model</a>
+      <button class="btn-logout" id="logoutBtn">Logout</button>
+    </div>
+  </nav>
+
+  <div class="page">
+    <div class="page-header">
+      <h1>MODEL TEST</h1>
+      <div class="page-subtitle">// upload a video — see what the model says</div>
+    </div>
+
+    <div class="test-wrap">
+
+      <div class="drop-zone" id="dropZone">
+        <input type="file" id="fileInput" accept=".mp4,.avi,.mov,.mkv" />
+        <span class="drop-icon">[ ▶ ]</span>
+        <div class="drop-label">Drop a video here or click to browse</div>
+        <div class="drop-formats">mp4 · avi · mov · mkv</div>
+      </div>
+
+      <div class="file-chosen" id="fileChosen">
+        Selected: <span id="fileName"></span>
+      </div>
+
+      <button class="btn-run" id="runBtn" disabled>Run Detection</button>
+
+      <div class="progress-wrap" id="progressWrap">
+        <div class="progress-label">Running inference...</div>
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill"></div>
+        </div>
+      </div>
+
+      <div class="result-panel" id="resultPanel">
+        <div class="result-header">
+          <div class="result-verdict" id="resultVerdict"></div>
+          <div class="result-confidence" id="resultConfLabel"></div>
+        </div>
+        <div class="result-body">
+          <div id="snapshotWrap"></div>
+          <div class="result-meta" id="resultMeta"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/test.js"></script>
+</body>
+</html>
