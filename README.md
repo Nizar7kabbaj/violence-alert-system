@@ -12,7 +12,7 @@
 [![JWT](https://img.shields.io/badge/JWT-Auth-000000?style=flat&logo=jsonwebtokens&logoColor=white)](https://jwt.io/)
 [![Prometheus](https://img.shields.io/badge/Prometheus-Metrics-E6522C?style=flat&logo=prometheus&logoColor=white)](https://prometheus.io/)
 
->End-of-year internship at the Faculty of Sciences and Technologies of Marrakech · ISGA · Jul – Aug 2024
+> End-of-year internship at the Faculty of Sciences and Technologies of Marrakech · ISGA · Jul – Aug 2024
 
 </div>
 
@@ -20,7 +20,8 @@
 
 ## 🎯 What it does
 
-Wraps a MobileNetV2 violence detection model in a production FastAPI service. Upload a video the model runs inference, extracts a snapshot from the moment of detection, fires a Telegram alert with the photo, and logs the entire chain. Security and observability were built in from day one: JWT rotation, rate limiting, audit trail, structured logs, Prometheus metrics.
+A MobileNetV2 violence detection model wrapped in a production FastAPI service. You upload a video. The model runs inference. If violence is detected, a snapshot is pulled from that frame and pushed to Telegram with the photo attached. Every step gets logged.
+Security and observability weren't bolted on at the end: JWT rotation, rate limiting, audit trail, structured logs, Prometheus metrics.
 
 ---
 
@@ -28,7 +29,7 @@ Wraps a MobileNetV2 violence detection model in a production FastAPI service. Up
 
 <div align="center">
 
-<img src="docs/gifs/app-walkthrough.gif" width="720"/>
+<img src="docs/gifs/app-walkthrough.gif" width="720" alt="Login, dashboard with live stats, alerts table, alert detail, mark as reviewed"/>
 
 *Login → dashboard with live stats → alerts table → alert detail → mark as reviewed.*
 
@@ -40,28 +41,30 @@ Wraps a MobileNetV2 violence detection model in a production FastAPI service. Up
 
 <div align="center">
 
-<table style="border: none; border-collapse: collapse;">
-<tr style="border: none;">
-<td align="center" width="55%" style="border: none;">
+<table>
+<tr>
+<td align="center" width="560">
 
 **Drop a video → get a result**
 
-<img src="docs/gifs/detect-flow.gif" width="100%"/>
+<img src="docs/gifs/detect-flow.gif" width="540" alt="Video upload and detection result"/>
 
 </td>
-<td align="center" width="45%" style="border: none;">
+<td align="center" width="340">
 
 **Telegram alert fires automatically**
 
-<img src="docs/gifs/telegram-alert.gif" width="280"/>
+<img src="docs/gifs/telegram-alert.gif" width="280" alt="Telegram alert with snapshot"/>
 
 </td>
 </tr>
 </table>
 
+</div>
+
 *Inference runs on the uploaded video. If violence is detected, a snapshot is extracted and pushed to Telegram in under 2 seconds.*
 
-</div>
+> On phones, the table overflows the viewport and GitHub wraps it in a horizontal scroll. Swipe left/right to see the full detection flow and the Telegram alert at proper size.
 
 ---
 
@@ -83,12 +86,12 @@ Wraps a MobileNetV2 violence detection model in a production FastAPI service. Up
 
 ```mermaid
 flowchart LR
-    A[📹 Video Upload] --> B[🤖 MobileNetV2\nKeras + TF 2.16]
-    B --> C[⚡ FastAPI\nAsync + Motor]
-    C --> D[(🗄️ MongoDB\nAtlas)]
-    C --> E[📊 Dashboard\nHTML + Chart.js]
-    C --> F[🔔 Telegram\nPhoto + Caption]
-    G[👁️ Watcher\npolls watch/ dir] --> C
+    A[📹 Video Upload] --> B[🤖 MobileNetV2<br/>Keras + TF 2.16]
+    B --> C[⚡ FastAPI<br/>Async + Motor]
+    C --> D[(🗄️ MongoDB<br/>Atlas)]
+    C --> E[📊 Dashboard<br/>HTML + Chart.js]
+    C --> F[🔔 Telegram<br/>Photo + Caption]
+    G[👁️ Watcher<br/>polls watch/ dir] --> C
 
     style A fill:#FFE4B5,stroke:#333,color:#000
     style B fill:#FF6F00,stroke:#333,color:#fff
@@ -104,15 +107,16 @@ flowchart LR
 ## 🚀 Quick start
 
 ### Prerequisites
+
 - Python 3.11
 - MongoDB Atlas M0 (free tier)
 - Telegram bot token from [@BotFather](https://t.me/BotFather)
 
-### 1️⃣ Clone & set up
+### 1️⃣ Clone and set up
 
 ```bash
-git clone https://github.com/Nizar7kabbaj/2024-vas.git
-cd 2024-vas/backend
+git clone https://github.com/Nizar7kabbaj/violence-alert-system.git
+cd violence-alert-system/backend
 python -m venv venv
 venv\Scripts\activate        # Windows PowerShell
 pip install -r requirements.txt
@@ -133,7 +137,7 @@ INTERNAL_API_KEY=<random 64-byte hex>
 CORS_ALLOWED_ORIGINS=http://localhost:8080
 ```
 
-### 3️⃣ Seed & run
+### 3️⃣ Seed and run
 
 ```bash
 # Create the admin account
@@ -148,7 +152,7 @@ python -m http.server 8080
 
 Open `http://localhost:8080/login.html`.
 
-> The model file (`modelnew.h5`) goes in `backend/models/`. Download it separately it's not tracked in Git.
+> The model file (`modelnew.h5`) goes in `backend/models/`. Download it separately. It's not tracked in Git.
 
 ---
 
@@ -184,7 +188,7 @@ Full results in [`docs/performance/`](docs/performance/).
 ## 📁 Repository structure
 
 ```
-2024-vas/
+violence-alert-system/
 ├── 🔐 backend/
 │   ├── app/
 │   │   ├── core/          # config, limiter, metrics, security
@@ -219,7 +223,7 @@ Full results in [`docs/performance/`](docs/performance/).
 
 ## 🎓 What I learned
 
-This was my first time building a backend where security wasn't optional. A few things that actually stuck:
+This was my first time building a backend where security wasn't optional. A few things that stuck:
 
 - **JWT refresh rotation** — the attack surface is bigger than most tutorials admit. Reuse detection matters.
 - **Async all the way** — mixing sync DB calls into an async FastAPI app breaks under load. Motor keeps it clean.
@@ -237,7 +241,7 @@ This was my first time building a backend where security wasn't optional. A few 
 
 **Mme. Rahil Imane** — my supervisor at FSTG Marrakech. Her feedback pushed me to document limitations honestly rather than hide behind accuracy numbers. That discipline shaped how I write about technical work.
 
-**Pr. Layla Wakrim** — my professor at ISGA Marrakech. She taught me to think about a project as a whole the framing, the story, what matters and what doesn't not just the code that runs.
+**Pr. Layla Wakrim** — my professor at ISGA Marrakech. She taught me to think about a project as a whole: the framing, the story, what matters and what doesn't. Not just the code that runs.
 
 Thank you both.
 
@@ -247,7 +251,7 @@ Thank you both.
 
 The model was trained on 700 videos at 128×128. It works, but it's not ready for real deployments without a larger dataset and higher resolution input.
 
-Telegram is fast and practical for development. It's not a production alerting channel — no delivery guarantees, no SIEM integration.
+Telegram is fast and practical for development. It's not a production alerting channel: no delivery guarantees, no SIEM integration.
 
 Both are documented in full: [`docs/model-limitations.md`](docs/model-limitations.md) · [`docs/alerting-limitations.md`](docs/alerting-limitations.md)
 
