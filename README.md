@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🛡️ Violence Alert System (VAS)
+# Violence Alert System
 
 **Async ML backend with JWT auth, audit logging, and instant Telegram alerts**
 
